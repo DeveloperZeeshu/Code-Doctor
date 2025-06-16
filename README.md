@@ -47,3 +47,8 @@ git clone https://github.com/DeveloperZeeshu/Code-Doctor.git
 cd code-doctor
 npm install
 npm run dev
+
+```
+
+## 🙋‍♂️ Author
+Made with ❤️ by Jeesan Abbas
