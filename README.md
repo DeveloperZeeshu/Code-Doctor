@@ -43,7 +43,7 @@ Built with Next.js, TailwindCSS, and Gemini API, it delivers modern LLM-style re
 ## 🔧 Installation
 
 ```bash
-git clone https://github.com/your-username/code-doctor.git
+git clone https://github.com/DeveloperZeeshu/Code-Doctor.git
 cd code-doctor
 npm install
 npm run dev
