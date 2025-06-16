@@ -27,7 +27,7 @@ const CodeExplainer = () => {
         e.preventDefault();
         const prompt = getExplanationPrompt(userInput.query, userInput.level);
 
-        const result = await getResponse('bubble sort in python');
+        const result = await getResponse(prompt);
 
         const userMessage = { role: 'user', text: userInput.query };
         const aiResponse = { role: 'ai', text: result };
