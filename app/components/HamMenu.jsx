@@ -19,7 +19,7 @@ export const HamMenu = () => {
                 </div>
                 <div className="flex flex-col justify-center items-center">
                     {/* <img src="" alt="brand" /> */}
-                    <Link onClick={() => setIsHamOpen(false)} href='/' className="text-[2.5rem] cursor-pointer text-center">Zeeshaan Abbas</Link>
+                    <Link onClick={() => setIsHamOpen(false)} href='/' className="text-[2.5rem] cursor-pointer text-center">Code Doctor</Link>
                 </div>
                 <div className="flex flex-col justify-center items-center gap-[1rem]">
                     <Link onClick={() => setIsHamOpen(false)} className={pathname === '/' ? 'text-[#d107f5] font-[500]': ''} href='/'>Home</Link>

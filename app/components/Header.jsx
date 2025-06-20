@@ -22,7 +22,7 @@ export const Header = () => {
 
                     <div className="">
                         {/* <img src="" alt="brand" /> */}
-                        <Link href='/' className="text-[2.5rem] cursor-pointer hidden lg:flex">Zeeshaan Abbas</Link>
+                        <Link href='/' className="text-[2.5rem] cursor-pointer hidden lg:flex">Code Doctor</Link>
                     </div>
                     <div className="hidden lg:flex text-center items-center gap-[4rem]">
                         <Link className={pathname === '/' ? 'text-[#d107f5] font-[500]' : ''} href='/'>Home</Link>

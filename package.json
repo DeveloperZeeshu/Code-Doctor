@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
+    "@react-pdf/renderer": "^4.3.0",
     "highlight.js": "^11.11.1",
     "next": "15.3.3",
     "react": "^19.0.0",
