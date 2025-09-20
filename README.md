@@ -40,15 +40,5 @@ Built with Next.js, TailwindCSS, and Gemini API, it delivers modern LLM-style re
 
 ---
 
-## 🔧 Installation
-
-```bash
-git clone https://github.com/DeveloperZeeshu/Code-Doctor.git
-cd code-doctor
-npm install
-npm run dev
-
-```
-
 ## 🙋‍♂️ Author
 Made with ❤️ by Jeesan Abbas
