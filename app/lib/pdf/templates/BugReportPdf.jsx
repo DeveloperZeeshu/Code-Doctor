@@ -69,8 +69,6 @@ const BugReportPdf = ({ report }) => (
             </View>
         </Page>
     </Document>
-
 )
-
 
 export default BugReportPdf;

@@ -3,9 +3,9 @@
 import { BiExport } from "react-icons/bi";
 import { pdf } from '@react-pdf/renderer';
 import { lazy, Suspense } from "react";
-import { extractBugReportData } from "../generatePdf/extractReportData";
-import BugReportPdf from "../generatePdf/BugReportPdf";
-const MarkDownViewer = lazy(() => import('./MarkDownViewer'));
+import { extractBugReportData } from "../../../lib/pdf/utils/extractReportData";
+import BugReportPdf from "../../../lib/pdf/templates/BugReportPdf";
+import MarkDownViewer from "../../../../components/ui/MarkDownViewer";
 
 export const BugReport = ({ response }) => {
     const generatePdf = async () => {

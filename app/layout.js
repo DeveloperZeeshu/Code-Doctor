@@ -1,6 +1,9 @@
-import { Header } from './components/Header';
-import { AppProvider } from './context/AppContext';
+import { Toaster } from 'react-hot-toast';
+import { Header } from '../components/layout/Header/Header';
+import { AppProvider } from '../context/AppContext';
 import './globals.css';
+import { Provider } from 'react-redux';
+import store from '../store/store.js';
 
 export const metadata = {
   title: {
@@ -56,10 +59,20 @@ const RootLayout = ({ children }) => {
     <>
       <html className='text-[62.5%]' lang='en'>
         <body className='bg-[#0e0d0d] mx-0 my-auto px-[3.2rem] min-w-[32rem]'>
-          <AppProvider>
-            <Header />
-            {children}
-          </AppProvider>
+          <Toaster
+            toastOptions={{
+              style: {
+                fontSize: '1.7rem',
+                fontWeight: '600'
+              }
+            }}
+          />
+          <Provider store={store}>
+            <AppProvider>
+              <Header />
+              {children}
+            </AppProvider>
+          </Provider>
         </body>
       </html>
     </>
