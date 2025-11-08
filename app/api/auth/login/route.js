@@ -1,0 +1,72 @@
+import { ACCESS_TOKEN_EXPIRY, REFRESH_TOKEN_EXPIRY } from "../../../../conf/constants.js"
+import { error, success } from "../../../../lib/response.js"
+import { createAccessToken, createRefreshToken, createSession, findUserByEmail, verifyPassword } from "../../../../services/auth.services.js"
+
+export const POST = async (req) => {
+    try {
+        const { email, password } = await req.json()
+
+        if (!email || !password)
+            return error('Email and password required.', 400)
+
+        const user = await findUserByEmail(email)
+
+        if (!user)
+            return error('User not found.', 404)
+
+        const isPasswordValid = await verifyPassword({ hashedPassword: user.password, password })
+
+        if (!isPasswordValid)
+            return error('Password didn\'t match.', 401)
+
+        const refreshToken = createRefreshToken()
+        if (!refreshToken)
+            return error('Something went wrong.', 500)
+
+        // Extract user-agent and ip
+        const userAgent = req.headers.get('user-agent') || 'unknown'
+        const forwardedFor = req.headers.get('x-forwarded-for')
+        const ip = forwardedFor?.split(',')[0]?.trim() || 'unknown'
+
+        const session = await createSession({
+            userId: user._id,
+            userAgent,
+            ip,
+            refreshToken,
+            expiresAt: Date.now() + REFRESH_TOKEN_EXPIRY
+        })
+
+        if (!session)
+            return error('Unable to create session.', 500)
+
+        const accessToken = await createAccessToken({
+            sub: user._id,
+            name: user.name,
+            email: user.email
+        })
+        if (!accessToken)
+            return error('Something went wrong.', 500)
+
+        const res = success({ accessToken, name: user.name, email: user.email }, '', 200)
+
+        const baseConfig = {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict',
+            path: '/'
+        }
+
+        res.cookies.set('refresh_token', refreshToken, {
+            ...baseConfig,
+            maxAge: REFRESH_TOKEN_EXPIRY
+        })
+
+        return res
+
+    } catch (err) {
+        console.log(err)
+        return error('Internal server error.', 500)
+    }
+}
+
+

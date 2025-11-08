@@ -1,26 +1,27 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { NextResponse } from "next/server";
+import { error, success } from "../../../lib/response.js";
+import conf from "../../../conf/conf.js";
 
 
 export const POST = async (req) => {
   try {
-    const genAi = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
+    const genAi = new GoogleGenerativeAI(conf.geminiApiKey)
     const model = genAi.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
-    const { body: prompt } = await req.json();
+    const { prompt } = await req.json();
 
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const output = await response.text();
 
-    return NextResponse.json({ output });
+    if(!output)
+      return error('Error fetching output.',500)
+
+    return success(output, '', 200)
   }
   catch (err) {
     console.log('Error Generating Gemini response: ', err);
-    return NextResponse.json(
-      { error: 'Failed to generate response' },
-      { status: 500 }
-    );
+    error('Failed to generate response', 500)
   }
 };
 

@@ -11,12 +11,20 @@
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
     "@react-pdf/renderer": "^4.3.0",
+    "@reduxjs/toolkit": "^2.10.1",
+    "argon2": "^0.44.0",
+    "axios": "^1.13.2",
     "highlight.js": "^11.11.1",
-    "next": "15.3.3",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.19.3",
+    "next": "^16.0.1",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-hook-form": "^7.66.0",
+    "react-hot-toast": "^2.6.0",
     "react-icons": "^5.5.0",
     "react-markdown": "^10.1.0",
+    "react-redux": "^9.2.0",
     "react-syntax-highlighter": "^15.6.1",
     "rehype-highlight": "^7.0.2",
     "rehype-raw": "^7.0.0",
@@ -26,7 +34,7 @@
     "@tailwindcss/postcss": "^4",
     "tailwindcss": "^4",
     "eslint": "^9",
-    "eslint-config-next": "15.3.3",
+    "eslint-config-next": "^16.0.1",
     "@eslint/eslintrc": "^3"
   }
 }

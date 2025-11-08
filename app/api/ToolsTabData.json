@@ -3,21 +3,21 @@
         "id": 1,
         "title": "Bug Report Generator",
         "desc": "AI-powered tool to find, explain, and document bugs in your code faster than ever.",
-        "link": "/bugReport",
+        "link": "/tools/bugReport",
         "icon": "FaBug"
     },
     {
         "id": 2,
         "title": "Code Generator",
         "desc": "AI-powered tool to Generate high quality code as per your need.",
-        "link": "/codeGenerator",
+        "link": "/tools/codeGenerator",
         "icon": "FaLaptopCode"
     },
     {
         "id": 3,
         "title": "Code Explainer",
         "desc": "AI-powered tool that helps you to understand Complex Code Snippets Instantly.",
-        "link": "/codeExplainer",
+        "link": "/tools/codeExplainer",
         "icon": "FaChalkboardTeacher"
     }
 ]
