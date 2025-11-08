@@ -1,9 +1,7 @@
 'use client';
 
-import { lazy, Suspense, useRef, useState } from "react"
-import { getResponse } from "../../utils/GeminiRequest";
+import { lazy, Suspense, useState } from "react"
 const MarkDownViewer = lazy(() => import('../../../components/ui/MarkDownViewer'));
-import { getCodeGenPrompt } from "./utils/getCodeGenPrompt";
 import Container from "../../../components/container/Container";
 import Button from "../../../components/ui/Button";
 import P from "../../../components/ui/P";
@@ -11,14 +9,31 @@ import H1 from "../../../components/ui/H1";
 import Input from "../../../components/ui/Input";
 import TextArea from "../../../components/ui/TextArea";
 import { useForm } from "react-hook-form";
+import { getCodeGenPrompt } from "./utils/getCodeGenPrompt.js";
+import { getResponse } from "../../utils/GeminiRequest.js";
 
 const WriteCode = () => {
     const [generatedCode, setGeneratedCode] = useState('');
     const [message, setMessage] = useState([]);
-    const { register, handleSubmit } = useForm()
+    const { register, handleSubmit, reset } = useForm()
 
-    const submit = (data) => {
-        console.log(data)
+    const submit = async (data) => {
+        try {
+            const prompt = getCodeGenPrompt(data.query, data.language)
+
+            const result = await getResponse(prompt)
+
+            const userMessage = { role: 'user', text: data.query };
+            const aiResponse = { role: 'ai', text: result };
+
+            setMessage((prev) => [...prev, userMessage, aiResponse]);
+            setGeneratedCode(result);
+
+            reset()
+
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     return (

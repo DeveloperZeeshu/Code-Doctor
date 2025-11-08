@@ -1,10 +1,8 @@
 'use client';
 
 import { lazy, Suspense, useState } from "react"
-import { getExplanationPrompt } from './utils/getExplanationPrompt';
 const MarkDownViewer = lazy(() => import('../../../components/ui/MarkDownViewer'));
 
-import { getResponse } from '../../utils/GeminiRequest';
 import Container from "../../../components/container/Container";
 import Button from "../../../components/ui/Button";
 import Select from "../../../components/ui/Select";
@@ -12,14 +10,31 @@ import H1 from "../../../components/ui/H1";
 import P from "../../../components/ui/P";
 import TextArea from "../../../components/ui/TextArea";
 import { useForm } from "react-hook-form";
+import { getExplanationPrompt } from "./utils/getExplanationPrompt.js";
+import { getResponse } from "../../utils/GeminiRequest.js";
 
 const CodeExplainer = () => {
     const [explainResponse, setExplainResponse] = useState('');
     const [message, setMessage] = useState([]);
-    const { register, handleSubmit } = useForm()
+    const { register, handleSubmit, reset } = useForm()
 
-    const submit = (data) => {
-        console.log(data)
+    const submit = async (data) => {
+        try {
+            const prompt = getExplanationPrompt(data.code, data.level)
+
+            const result = await getResponse(prompt)
+
+            const userMessage = { role: 'user', text: data.code };
+            const aiResponse = { role: 'ai', text: result };
+
+            setMessage((prev) => [...prev, userMessage, aiResponse]);
+            setExplainResponse(result);
+
+            reset()
+
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     return (

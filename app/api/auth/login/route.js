@@ -1,3 +1,4 @@
+import { ACCESS_TOKEN_EXPIRY, REFRESH_TOKEN_EXPIRY } from "../../../../conf/constants.js"
 import { error, success } from "../../../../lib/response.js"
 import { createAccessToken, createRefreshToken, createSession, findUserByEmail, verifyPassword } from "../../../../services/auth.services.js"
 
@@ -18,24 +19,35 @@ export const POST = async (req) => {
         if (!isPasswordValid)
             return error('Password didn\'t match.', 401)
 
+        const refreshToken = createRefreshToken()
+        if (!refreshToken)
+            return error('Something went wrong.', 500)
+
         // Extract user-agent and ip
         const userAgent = req.headers.get('user-agent') || 'unknown'
         const forwardedFor = req.headers.get('x-forwarded-for')
         const ip = forwardedFor?.split(',')[0]?.trim() || 'unknown'
 
-        const session = await createSession({ userId: user._id, userAgent, ip })
+        const session = await createSession({
+            userId: user._id,
+            userAgent,
+            ip,
+            refreshToken,
+            expiresAt: Date.now() + REFRESH_TOKEN_EXPIRY
+        })
 
         if (!session)
             return error('Unable to create session.', 500)
 
-        const accessToken = await createAccessToken({ id: user._id, name: user.name, email: user.email, sessionId: session._id })
-
-        const refreshToken = await createRefreshToken(session._id)
-
-        if (!accessToken || !refreshToken)
+        const accessToken = await createAccessToken({
+            sub: user._id,
+            name: user.name,
+            email: user.email
+        })
+        if (!accessToken)
             return error('Something went wrong.', 500)
 
-        const res = success(200)
+        const res = success({ accessToken, name: user.name, email: user.email }, '', 200)
 
         const baseConfig = {
             httpOnly: true,
@@ -43,14 +55,10 @@ export const POST = async (req) => {
             sameSite: 'strict',
             path: '/'
         }
-        res.cookies.set('access_token', accessToken, {
-            ...baseConfig,
-            maxAge: 60 * 15
-        })
 
         res.cookies.set('refresh_token', refreshToken, {
             ...baseConfig,
-            maxAge: 60 * 60 * 24 * 7
+            maxAge: REFRESH_TOKEN_EXPIRY
         })
 
         return res

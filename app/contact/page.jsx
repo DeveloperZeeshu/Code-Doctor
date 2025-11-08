@@ -29,7 +29,7 @@ const Contact = () => {
             icon: <FaWhatsapp />
         },
         {
-            link: 'https://www.instagram.com/zeeshaan_abbas/',
+            link: 'https://www.instagram.com/',
             icon: <BiLogoInstagram />
         },
         {

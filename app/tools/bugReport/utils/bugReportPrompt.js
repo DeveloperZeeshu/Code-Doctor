@@ -2,7 +2,8 @@ export const getBugReportPrompt = ({ code, description, environment, severity, s
   return `
 You are acting as a **professional QA engineer and software developer**.
 
-Your task is to generate a **clear, professional, and structured bug report** based on the information provided below. Output should be in **Markdown format**, following standard QA/reporting practices.
+Your task is to generate a **clear, professional, and structured bug report** based on the information provided below.  
+Output must strictly follow the **key-value Markdown format** shown in the template below.
 
 ---
 
@@ -27,21 +28,37 @@ ${severity || 'Medium'}
 
 ---
 
-### Output Instructions
+### Output Format Instructions
 
-Please structure your report as follows:
+Generate the final report in **Markdown**, using this exact structure:
 
-1. **Bug Title** - A short, descriptive title
-2. **Steps to Reproduce** - Numbered steps, minimal but complete
-3. **Expected Behavior** - What should happen
-4. **Actual Behavior** - What actually happens
-5. **Environment Info** - System/browser/framework/version details
-6. **Severity Level** - As provided, with justification if needed
-7. **Additional Notes or Suggestions** - Optional
+\`\`\`md
+**Bug Title**: [Short, descriptive title]
 
-Use **Markdown formatting** (e.g., \`code blocks\`, bullet points, bold text). Ensure the tone is formal, precise, and QA-focused.
+**Steps to Reproduce**:
+1. [Step 1]
+2. [Step 2]
+3. [...]
 
-Generate only the bug report — avoid personal comments, apologies, or unrelated suggestions.
+**Expected Behavior**: [What should happen]
+
+**Actual Behavior**: [What actually happens]
+
+**Environment Info**: [Browser/OS/Framework/Version details]
+
+**Severity Level**: [As provided, with brief justification]
+
+**Additional Notes or Suggestions**: [Optional improvements or causes]
+\`\`\`
+
+---
+
+### Important Guidelines
+- Do **not** include section headings like "### 1." — only use bold keys as shown above.  
+- Do **not** add any commentary, introductions, or explanations outside the structured report.  
+- Keep the tone **formal, QA-focused, and concise**.
+- Use **Markdown formatting** only (no plain text or JSON).
+
+Generate **only** the structured report content in Markdown.
 `;
 };
-

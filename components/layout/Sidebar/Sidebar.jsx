@@ -1,22 +1,19 @@
-'use client';
+import Link from "next/link"
+import { usePathname, useRouter } from "next/navigation"
+import { GiHamburgerMenu } from "react-icons/gi"
+import { IoClose } from "react-icons/io5"
+import { useDispatch, useSelector } from "react-redux"
+import Button from "../../ui/Button"
+import { logout } from "../../../store/authSlice.js"
+import { useContext } from "react"
+import { AppContext } from "../../../context/AppContext"
 
-import { GiHamburgerMenu } from "react-icons/gi";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import Button from "../../ui/Button";
-import { useDispatch, useSelector } from "react-redux";
-import toast from "react-hot-toast";
-import axios from "axios";
-import { logout } from "../../../store/authSlice.js";
-import { useContext } from "react";
-import { AppContext } from "../../../context/AppContext";
-
-export const Header = () => {
-    const pathname = usePathname();
+const Sidebar = () => {
     const router = useRouter()
-    const dispatch = useDispatch()
     const authStatus = useSelector(state => state.auth.status)
-    const {openSidebar} = useContext(AppContext)
+    const pathname = usePathname()
+    const dispatch = useDispatch()
+    const { closeSidebar } = useContext(AppContext)
 
     const handleLogout = async () => {
         try {
@@ -62,18 +59,19 @@ export const Header = () => {
 
     return (
         <>
-            <header className="text-white text-[1.8rem] px-0 max-w-[142rem] lg:px-[2.4rem] pt-[2.4rem] pb-[9.6rem] mx-auto my-auto flex justify-center">
-                <div className="flex items-center justify-between sm:gap-2 relative w-full">
-                
-                    {<button onClick={openSidebar} className="lg:hidden text-5xl text-[purple] cursor-pointer pr-[4rem]"><GiHamburgerMenu /></button>}
+            <div className="bg-[#202123] p-[1.5rem] text-white text-[1.8rem] flex flex-col justify-start items-center fixed left-0 z-10 h-screen w-[27rem] rounded-r-3xl gap-9">
+                <div className="w-full text-right">
+                    <button onClick={closeSidebar} className="text-pink-500 cursor-pointer text-[3rem]"><IoClose /></button>
+                </div>
 
+                <div className="flex flex-col gap-8">
                     <div className="">
-                        <Link href='/' className="text-[2.5rem] cursor-pointer hidden lg:flex">Code Doctor</Link>
+                        <Link href='/' className="text-[2.5rem] cursor-pointer">Code Doctor</Link>
                     </div>
-                    <div className="hidden lg:flex text-center items-center gap-[4rem]">
+                    <div className="flex flex-col text-center items-center gap-6">
                         {
                             navItems.map(navLink => (
-                                navLink.active && <Link key={navLink.slug} href={navLink.slug} className={pathname === navLink.slug ? 'text-[#d107f5] font-[500]' : ''}>{navLink.name}</Link>
+                                navLink.active && <Link onClick={closeSidebar} key={navLink.slug} href={navLink.slug} className={pathname === navLink.slug ? 'text-[#d107f5] font-[500]' : ''}>{navLink.name}</Link>
                             ))
                         }
                     </div>
@@ -86,15 +84,13 @@ export const Header = () => {
                             />
                         </div>
                         :
-                        <button className="cursor-pointer" onClick={handleLogout}>Logout</button>
+                        <button className="cursor-pointer mt-8" onClick={handleLogout}>Logout</button>
                     }
                 </div>
-            </header>
+            </div>
         </>
     )
 }
 
-
-
-
+export default Sidebar
 

@@ -15,8 +15,8 @@ export const SignUp = () => {
         try {
             const res = await axios.post('/api/auth/register', data)
             if (res.data.success) {
-                console.log(res.data)
                 toast.success('Registration successful.')
+                router.push('/api/auth/login')
             }
         } catch (err) {
             if (err.response) {

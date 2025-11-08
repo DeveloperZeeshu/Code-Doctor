@@ -6,9 +6,8 @@ const protectedRoutes = [
     '/tools/codeGenerator'
 ]
 
-const middleware = async (request) => {
+const proxy = async (request) => {
     try {
-        const accessToken = request.cookies.get('access_token')?.value
         const refreshToken = request.cookies.get('refresh_token')?.value
         const currentPath = request.nextUrl.pathname
 
@@ -16,24 +15,24 @@ const middleware = async (request) => {
             currentPath.startsWith(path)
         )
 
-        if (!accessToken && refreshToken && !currentPath.startsWith('/api/auth/refresh')) {
-            return NextResponse.rewrite(new URL('/api/auth/refresh', request.url))
-        }
-
-        if (isProtected && !accessToken)
+        if (isProtected && !refreshToken)
             return NextResponse.redirect(new URL('/auth/login', request.url))
 
         return NextResponse.next()
     } catch (err) {
-        console.log('Middleware error:',err)
+        console.log('Middleware error:', err)
         return NextResponse.next()
     }
 }
 
-export default middleware
+export default proxy
 
 export const config = {
-    matcher: ['/tools/bugReport/:path*', '/tools/codeExplainer/:path*', '/tools/codeGenerator/:path*']
+    matcher: [
+        '/tools/bugReport/:path*',
+        '/tools/codeExplainer/:path*',
+        '/tools/codeGenerator/:path*'
+    ]
 }
 
 

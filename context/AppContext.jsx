@@ -2,33 +2,19 @@
 
 import { createContext, useState } from "react";
 
-export const AppContext = createContext();
+export const AppContext = createContext(null)
 
 export const AppProvider = ({ children }) => {
-    const [showLog, setShowLog] = useState(false);
-    const [showSignUp, setShowSignUp] = useState(false);
-    const [isHamOpen, setIsHamOpen] = useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
-    const openLogin = () => {
-        setShowLog(true);
-        setShowSignUp(false);
-        setIsHamOpen(false);
+    const openSidebar = () => {
+        setIsSidebarOpen(true)
     }
 
-    const openSignUp = () => {
-        setShowSignUp(true);
-        setShowLog(false);
-        setIsHamOpen(false);
+    const closeSidebar = () => {
+        setIsSidebarOpen(false)
     }
 
-    const openHam = () => {
-        setIsHamOpen(true);
-        setShowLog(false);
-        setShowSignUp(false);
-    }
-
-    return <AppContext.Provider value={{ showLog, setShowLog, showSignUp, setShowSignUp, openSignUp, openLogin, isHamOpen, setIsHamOpen, openHam }}>
-        {children}
-    </AppContext.Provider>
+    return <AppContext.Provider value={{ isSidebarOpen, openSidebar, closeSidebar }}>{children}</AppContext.Provider>
 }
 

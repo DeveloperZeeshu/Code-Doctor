@@ -5,32 +5,17 @@ Built with Next.js, TailwindCSS, and Gemini API, it delivers modern LLM-style re
 
 ---
 
-## 🚀 Features
+## 🚀 Features (updated)
 
-- ⚡ **Code Generator**  
-  Generate clean, well-documented code in multiple programming languages based on natural language prompts.
-
-- 🧠 **Code Explainer**  
-  Understand complex code instantly with AI-powered explanations and breakdowns.
-
-- 🐞 **Detailed Bug Report Generator**  
-  Automatically analyze your code, detect bugs, generate detailed reports, and export them as PDF.
-
-- 🎯 **Modern LLM-Style Response Rendering**  
-  AI outputs are beautifully rendered using Markdown + Syntax Highlighting, mimicking modern LLMs like ChatGPT, Gemini, Claude.
-
-- 📄 **Export to PDF**  
-  Generate professional bug reports and save them as PDF for documentation or sharing.
-
-- 📱 **Fully Responsive Design**  
-  Works seamlessly on all devices — mobile, tablet, desktop.
-
-- 🛠️ **Built With:**
-  - Next.js (React Framework)
-  - TailwindCSS (Utility-first CSS)
-  - Gemini API (Google AI)
-  - React Markdown with advanced parsing
-  - React Syntax Highlighter for code formatting
+- ⚡ **Code Generator** — Generate well-documented code in multiple languages.
+- 🧠 **Code Explainer** — AI-powered explanations and step-by-step breakdowns.
+- 🐞 **Detailed Bug Report Generator** — Analyze code, detect bugs, export as PDF.
+- 🔐 **Authentication (JWT + Session)** — Flexible auth: JWT for stateless API access and session-based auth for server-rendered areas, backed by MongoDB.
+- 🧭 **Redux for Auth & Global State** — Client-side auth state, route guards, and centralized user/session handling.
+- 🎯 **Modern LLM-Style Response Rendering** — Markdown + syntax highlighting.
+- 📄 **Export to PDF** — Export reports to PDF for documentation/sharing.
+- 📱 **Fully Responsive Design** — Works on mobile, tablet, desktop.
+- 🛠️ **Built With:** Next.js, TailwindCSS, Gemini API, React Markdown, React Syntax Highlighter, Redux Toolkit, MongoDB.
 
 ---
 

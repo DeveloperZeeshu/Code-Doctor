@@ -1,5 +1,5 @@
 import { error, success } from "../../../../lib/response.js"
-import { createAccessToken, findSessionBySessionId, findUserById, verifyJWTToken } from "../../../../services/auth.services.js"
+import { createAccessToken, findSessionByToken, findUserById, hashToken } from "../../../../services/auth.services.js"
 
 export const GET = async (req) => {
     try {
@@ -8,45 +8,27 @@ export const GET = async (req) => {
         if (!refreshToken)
             return error('Token not found.', 404)
 
-        const {sessionId} = await verifyJWTToken(refreshToken)
-
-        if (!sessionId)
-            return error('Something went wrong', 500)
-
-        const session = await findSessionBySessionId(sessionId)
+        const hashedToken = hashToken(refreshToken)
+        const session = await findSessionByToken({ refreshToken: hashedToken })
 
         if (!session)
-            return error('Invalid session id.', 400)
+            return error('Invalid session.', 400)
 
         const user = await findUserById(session.userId)
 
         if (!user)
             return error('User not found', 404)
 
-        const newAccessToken = await createAccessToken({
-            id: user._id,
+        const accessToken = await createAccessToken({
+            sub: user._id,
             name: user.name,
             email: user.email,
-            sessionId: session._id
         })
 
-        if (!newAccessToken)
+        if (!accessToken)
             return error('Something went wrong.', 500)
 
-        const res = success(200)
-
-        const baseConfig = {
-            httpOnly: true,
-            secure: true,
-            sateSite: 'strict',
-            path: '/'
-        }
-        res.cookies.set('access_token', newAccessToken, {
-            ...baseConfig,
-            maxAge: 60 * 15
-        })
-
-        return res
+        return success({ accessToken, name: user.name, email: user.email }, '', 200)
 
     } catch (err) {
         console.log(err)

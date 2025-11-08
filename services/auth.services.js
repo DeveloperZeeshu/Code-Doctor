@@ -4,6 +4,8 @@ import argon2 from 'argon2'
 import Session from "../models/Session.js"
 import jwt from 'jsonwebtoken'
 import conf from "../conf/conf.js"
+import { ACCESS_TOKEN_EXPIRY, MILLISECOND_PER_SECOND, REFRESH_TOKEN_EXPIRY } from "../conf/constants.js"
+import crypto from 'crypto'
 
 export const findUserByEmail = async (email) => {
     try {
@@ -59,11 +61,19 @@ export const createUser = async ({ name, email, password }) => {
     }
 }
 
-export const createSession = async ({ userId, userAgent, ip }) => {
+export const createSession = async ({ userId, userAgent, ip, refreshToken, expiresAt }) => {
     try {
         await dbConnect()
 
-        const session = await Session.create({ userId, userAgent, ip })
+        const hashedToken = crypto.createHash('sha256').update(refreshToken).digest('hex')
+
+        const session = await Session.create({
+            userId,
+            userAgent,
+            ip,
+            refreshToken: hashedToken,
+            expiresAt
+        })
 
         if (!session) throw new Error('Error creating session.')
 
@@ -74,15 +84,18 @@ export const createSession = async ({ userId, userAgent, ip }) => {
     }
 }
 
-export const createAccessToken = async ({ id, name, email, sessionId }) => {
+export const hashToken = (token) => {
+    return crypto.createHash('sha256').update(token).digest('hex')
+}
+
+export const createAccessToken = async ({ sub, name, email }) => {
     try {
         return jwt.sign({
-            id,
+            sub,
             name,
             email,
-            sessionId
         }, conf.jwtSecret, {
-            expiresIn: '15m'
+            expiresIn: ACCESS_TOKEN_EXPIRY / MILLISECOND_PER_SECOND
         })
     } catch (err) {
         console.log('Error creating access token:', err)
@@ -90,17 +103,8 @@ export const createAccessToken = async ({ id, name, email, sessionId }) => {
     }
 }
 
-export const createRefreshToken = async (sessionId) => {
-    try {
-        return jwt.sign({
-            sessionId
-        }, conf.jwtSecret, {
-            expiresIn: '7d'
-        })
-    } catch (err) {
-        console.log('Error creating refresh token:', err)
-        throw err
-    }
+export const createRefreshToken = () => {
+    return crypto.randomBytes(64).toString('hex')
 }
 
 export const verifyJWTToken = async (token) => {
@@ -119,6 +123,35 @@ export const findSessionBySessionId = async (_id) => {
         return await Session.findOne({ _id })
     } catch (err) {
         console.log('Error finding session:', err)
+        throw err
+    }
+}
+
+export const findSessionByToken = async ({ refreshToken }) => {
+    try {
+        await dbConnect()
+        const now = new Date()
+        return await Session.findOne({
+            refreshToken,
+            valid: true,
+            expiresAt: { $gt: now }
+        })
+    } catch (err) {
+        console.log('Error finding session:', err)
+        throw err
+    }
+}
+
+export const inValidateSession = async (refreshToken) => {
+    try {
+        const updatedSession = Session.findOneAndUpdate({ refreshToken }, { $set: { valid: false } })
+
+        if (!updatedSession)
+            throw new Error('Error invalidating session.')
+
+        return updatedSession
+    } catch (err) {
+        console.log('Error invalidating session:', err)
         throw err
     }
 }

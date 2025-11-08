@@ -6,17 +6,22 @@ import Input from "../../components/ui/Input";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { login } from "../../store/authSlice.js";
 
 export const SignIn = () => {
     const router = useRouter()
+    const dispatch = useDispatch()
     const { register, handleSubmit, formState: { errors } } = useForm()
 
     const submit = async (data) => {
         try {
             const res = await axios.post('/api/auth/login', data)
             if (res.data.success) {
-                console.log(res.data)
                 toast.success('Logged In successfully.')
+                const { accessToken, name, email } = res.data.data
+                dispatch(login({ accessToken, user: { name, email } }))
+                router.push('/')
             }
         } catch (err) {
             if (err.response) {

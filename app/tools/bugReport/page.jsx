@@ -9,13 +9,21 @@ import P from "../../../components/ui/P";
 import TextArea from "../../../components/ui/TextArea";
 import { useForm } from "react-hook-form";
 import { BugReport } from "./components/BugReport";
+import { getBugReportPrompt } from "./utils/bugReportPrompt.js";
+import { getResponse } from "../../utils/GeminiRequest.js";
 
 const BugReportGenerator = () => {
     const [report, setReport] = useState('');
-    const { register, handleSubmit } = useForm()
+    const { register, handleSubmit, reset } = useForm()
 
-    const submit = (data) => {
-        console.log(data)
+    const submit = async(data) => {
+        const prompt = getBugReportPrompt(data)
+
+        const result = await getResponse(prompt)
+
+        setReport(result)
+
+        reset()
     }
 
     return (
